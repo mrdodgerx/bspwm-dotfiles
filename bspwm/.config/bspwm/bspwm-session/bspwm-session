@@ -1,0 +1,92 @@
+#!/bin/bash
+# BSPWM session wrapper for LightDM with proper DBus & X session
+
+# Load environment files (non-failing)
+[ -f /etc/profile ] && . /etc/profile
+[ -f "$HOME/.profile" ] && . "$HOME/.profile"
+[ -f "$HOME/.xprofile" ] && . "$HOME/.xprofile"
+[ -f /etc/locale.conf ] && . /etc/locale.conf
+
+# Desktop environment detection
+#export XDG_SESSION_TYPE=x11
+#export XDG_CURRENT_DESKTOP=GNOME:KDE:XFCE:MATE:BSPWM
+export XDG_CURRENT_DESKTOP=XFCE
+#export DESKTOP_SESSION=bspwm
+#export GTK_USE_PORTAL=0
+
+# Set default XDG_DATA_DIRS if empty
+export XDG_DATA_DIRS="${XDG_DATA_DIRS:-/usr/local/share:/usr/share:$HOME/.local/share}"
+
+# LightDM usually sets this via PAM; fallback if missing (edge cases)
+[ -z "${XDG_RUNTIME_DIR:-}" ] && export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+# Start D-Bus session if not running
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+  eval "$(dbus-launch --sh-syntax --exit-with-session)"
+  export DBUS_SESSION_BUS_ADDRESS
+  export DBUS_SESSION_BUS_PID
+fi
+
+# Propagate environment to systemd user services (nm-applet, dunst, etc.)
+if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+  dbus-update-activation-environment --systemd --all >/dev/null 2>&1 || \
+  dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP XDG_DATA_DIRS XDG_SESSION_TYPE DESKTOP_SESSION
+fi
+command -v systemctl >/dev/null 2>&1 && \
+  systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP XDG_DATA_DIRS XDG_SESSION_TYPE DESKTOP_SESSION >/dev/null 2>&1 || true
+
+# Start secrets/keyring if available to satisfy Chromium-based password-store
+if command -v gnome-keyring-daemon >/dev/null 2>&1; then
+  eval "$(gnome-keyring-daemon --start --components=secrets,ssh 2>/dev/null)"
+  export SSH_AUTH_SOCK
+fi
+
+# startup
+start_once() {
+    cmd="$1"; shift
+    if command -v "$cmd" >/dev/null 2>&1; then
+        pgrep -x "$cmd" >/dev/null || "$cmd" "$@" &
+    fi
+}
+
+start_once sxhkd
+start_once dunst
+start_once blueman-applet  # Fixed typo (was blueman-adapters)
+start_once picom
+start_once xfce4-power-manager
+start_once nm-applet --indicator
+start_once libinput-gestures
+
+# ─── Start Mopidy (Music Server) ───
+#if command -v mopidy >/dev/null; then
+#   mkdir -p "$HOME/.cache/mopidy"
+#   pgrep -x mopidy >/dev/null || mopidy --config "$HOME/.config/mopidy/mopidy.conf" > "$HOME/.cache/mopidy/log" 2>&1 &
+#fi
+
+
+# ─── Launch Polybar ───
+"$HOME/.config/polybar/cuts/launch.sh" --cuts &
+
+if [ -x "$HOME/.config/polybar/cuts/launch.sh" ]; then
+    pkill -x polybar 2>/dev/null
+    sleep 2
+    "$HOME/.config/polybar/cuts/launch.sh" --cuts &
+fi
+# Give polybar a moment before restoring wallpaper
+sleep 1
+# ─── Restore Wallpaper ───
+[ -f "$HOME/.config/nitrogen/bg-saved.cfg" ] && nitrogen --restore &
+
+# ─── Set Random Wallpapers ───
+if [ -x "$HOME/.config/bin/others/random_wallpaper.sh" ]; then
+    "$HOME/.config/bin/others/random_wallpaper.sh" &
+fi
+
+#sleep 1
+start_once mate-mouse-properties
+
+
+# Defer all user autostarts to ~/.config/bspwm/bspwmrc
+exec bspwm
+
+

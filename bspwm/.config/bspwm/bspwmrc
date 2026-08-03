@@ -1,0 +1,153 @@
+#!/bin/sh
+
+# Kill stale bspwmrc instances from previous crashes
+pidof -x bspwmrc | tr ' ' '\n' | grep -v "^$$$" | xargs -r kill 2>/dev/null
+
+##############################################################
+##            Environment & Systemd Integration             ##
+##############################################################
+
+#if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+#    dbus-update-activation-environment --systemd --all >/dev/null 2>&1 || \
+#    dbus-update-activation-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP XDG_DATA_DIRS XDG_SESSION_TYPE DESKTOP_SESSION
+#fi
+
+#if command -v systemctl >/dev/null 2>&1; then
+#    systemctl --user import-environment DISPLAY XAUTHORITY XDG_CURRENT_DESKTOP \
+#        XDG_DATA_DIRS XDG_SESSION_TYPE DESKTOP_SESSION >/dev/null 2>&1
+#fi
+
+##############################################################
+##                  Keyring / Secrets                       ##
+##############################################################
+
+if command -v gnome-keyring-daemon >/dev/null 2>&1; then
+    eval "$(gnome-keyring-daemon --start --components=secrets,ssh 2>/dev/null)"
+    export SSH_AUTH_SOCK
+fi
+
+##############################################################
+##                  Helper Functions                        ##
+##############################################################
+
+start_once() {
+    if command -v "$1" >/dev/null 2>&1; then
+        pgrep -x "$(basename "$1")" >/dev/null || "$@" &
+    fi
+}
+
+##############################################################
+##                    User Scripts                          ##
+##############################################################
+
+[ -x "$HOME/.config/bin/monitor/script.sh" ] && (sleep 2 && "$HOME/.config/bin/monitor/script.sh") &
+[ -x "$HOME/.config/bin/temperature/temp.sh" ] && "$HOME/.config/bin/temperature/temp.sh" &
+#[ -x "$HOME/.config/bin/others/random_wallpaper.sh" ] && "$HOME/.config/bin/others/random_wallpaper.sh" &
+
+##############################################################
+##                     Wallpaper                            ##
+##############################################################
+
+[ -f "$HOME/.config/nitrogen/bg-saved.cfg" ] && nitrogen --restore &
+
+##############################################################
+##                       Conky                              ##
+##############################################################
+
+pkill -x conky 2>/dev/null
+[ -x "$HOME/.conky/conky-startup.sh" ] && "$HOME/.conky/conky-startup.sh" &
+
+##############################################################
+##                       Polybar                            ##
+##############################################################
+
+if [ -x "$HOME/.config/polybar/cuts/launch.sh" ]; then
+    pkill -x polybar 2>/dev/null
+    "$HOME/.config/polybar/cuts/launch.sh" --cuts &
+fi
+
+##############################################################
+##                     Autostart Apps                       ##
+##############################################################
+
+start_once sxhkd
+start_once dunst
+start_once blueman-applet
+start_once picom
+start_once xfce4-power-manager
+start_once nm-applet --indicator
+start_once libinput-gestures
+start_once mate-mouse-properties
+
+
+##############################################################
+##                  Other Auto Start                        ##
+##############################################################
+
+##############################################################
+##                Audio State Persistence                    ##
+##############################################################
+
+AUDIO_STATE="$HOME/.config/bspwm/audio_state"
+if [ -f "$AUDIO_STATE" ]; then
+    . "$AUDIO_STATE"
+    pactl set-sink-volume  @DEFAULT_SINK@   "${SINK_VOL}%"  2>/dev/null
+    pactl set-sink-mute   @DEFAULT_SINK@   "$SINK_MUTE"    2>/dev/null
+    pactl set-source-volume @DEFAULT_SOURCE@ "${SRC_VOL}%"  2>/dev/null
+    pactl set-source-mute  @DEFAULT_SOURCE@ "$SRC_MUTE"    2>/dev/null
+fi
+
+numlockx on &
+
+##############################################################
+##                   Java WM Fix                            ##
+##############################################################
+
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+##############################################################
+##                     BSPWM SETTINGS                       ##
+##############################################################
+
+bspc config border_radius                8
+bspc config border_width                 2
+bspc config window_gap                   10
+bspc config top_padding                  20
+bspc config bottom_padding               0
+bspc config left_padding                 0
+bspc config right_padding                0
+bspc config single_monocle               false
+bspc config click_to_focus               true
+bspc config split_ratio                  0.50
+bspc config borderless_monocle           true
+bspc config gapless_monocle              true
+bspc config focus_by_distance            true
+bspc config focus_follows_pointer        true
+bspc config history_aware_focus          true
+bspc config remove_disabled_monitors     true
+bspc config merge_overlapping_monitors   true
+bspc config pointer_modifier             mod4
+bspc config pointer_action1              move
+bspc config pointer_action2              resize_side
+bspc config pointer_action3              resize_corner
+
+##############################################################
+##                          COLORS                          ##
+##############################################################
+
+bspc config normal_border_color          "#4c566a"
+bspc config active_border_color          "#1e1e1e"
+bspc config focused_border_color         "#5e81ac"
+bspc config presel_feedback_color        "#5e81ac"
+bspc config urgent_border_color          "#dd2727"
+
+##############################################################
+##                      WINDOW RULES                        ##
+##############################################################
+
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Brave-browser desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+bspc rule -a xzoom state=floating center=true follow=on

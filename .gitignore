@@ -1,0 +1,52 @@
+# ================================================================
+#  CREDENTIALS & SECRETS  (NEVER COMMIT THESE)
+# ================================================================
+.git-credentials
+.netrc
+**/.password
+**/credentials
+*.credentials
+secrets.zsh
+private/
+
+# SSH / keys / certs
+*.rsa
+*.pem
+*.key
+*.p12
+*.p8
+id_*
+
+# ================================================================
+#  AUTHORIZATION FILE  (polybar scripts read these)
+# ================================================================
+# (covers spotify credentials under polybar/cuts/scripts/spotify)
+
+# ================================================================
+#  APP RUNTIME / LOCAL STATE  (not shared dotfiles)
+# ================================================================
+**/audio_state
+*.log
+*.lock
+*.pid
+.cache/
+
+# ================================================================
+#  BACKUP / ORPHANS  (stale copies, keep repo tidy)
+# ================================================================
+*.bak
+*.ori
+*.orig
+*.old
+*~
+# Kill sub-repos that should be referenced, not vendored
+**/conky-grapes/
+**/polybarazan/
+**/Unused/
+
+# ================================================================
+#  EDITOR / OS CRUFT
+# ================================================================
+*.swp
+.DS_Store
+Thumbs.db

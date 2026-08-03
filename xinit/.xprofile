@@ -1,0 +1,2 @@
+# Disable glamor OpenGL acceleration (prevents Xorg crash on Optimus laptops)
+export GLAMOR_DISABLE=1
