@@ -14,6 +14,8 @@ export CHROME_EXECUTABLE="/usr/bin/google-chrome-stable"
 export XDG_CURRENT_DESKTOP="bspwm"
 # Load local secrets (gitignored). Real tokens live in ~/.config/private/secrets.zsh
 [[ -f "$HOME/.config/private/secrets.zsh" ]] && source "$HOME/.config/private/secrets.zsh"
+# Load local SSH host shortcuts (gitignored, LAN-only). See ~/.config/private/ssh-aliases.zsh
+[[ -f "$HOME/.config/private/ssh-aliases.zsh" ]] && source "$HOME/.config/private/ssh-aliases.zsh"
 export OPENCODE_SERVER_PASSWORD="${OPENCODE_SERVER_PASSWORD:-}"
 export OPENCODE_SERVER_URL="http://127.0.0.1:4096"
 
