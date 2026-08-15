@@ -20,6 +20,8 @@ if [[ -n "$EXTERNAL" ]]; then
 
     # bspwm desktops
     bspc monitor "$INTERNAL" -d 1 2 3 4 5
+#    bspc monitor "$INTERNAL" -d 1 2 3 4 5 6 7 8 9
+#    bspc monitor "$EXTERNAL" -d 0
     bspc monitor "$EXTERNAL" -d 6 7 8 9 0
 
 else

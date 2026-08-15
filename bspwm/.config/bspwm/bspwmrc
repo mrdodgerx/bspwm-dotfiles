@@ -66,6 +66,11 @@ if [ -x "$HOME/.config/polybar/cuts/launch.sh" ]; then
     "$HOME/.config/polybar/cuts/launch.sh" --cuts &
 fi
 
+# Auto-hide polybar bars while any window is fullscreen
+if [ -x "$HOME/.config/polybar/cuts/scripts/autohide.sh" ]; then
+    "$HOME/.config/polybar/cuts/scripts/autohide.sh" &
+fi
+
 ##############################################################
 ##                     Autostart Apps                       ##
 ##############################################################
