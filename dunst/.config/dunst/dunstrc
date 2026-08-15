@@ -201,6 +201,14 @@ background = "#191311"
 #background = "#2B313C"
 timeout = 8
 
+# Monitor hotplug notifications (sent by bin/.config/bin/monitor/script.sh)
+[monitor-hotplug]
+    appname = "Monitor"
+    frame_color = "#9dcafc"
+    foreground = "#bac8da"
+    background = "#101418"
+    timeout = 5
+
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.

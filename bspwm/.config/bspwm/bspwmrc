@@ -71,6 +71,11 @@ if [ -x "$HOME/.config/polybar/cuts/scripts/autohide.sh" ]; then
     "$HOME/.config/polybar/cuts/scripts/autohide.sh" &
 fi
 
+# Monitor hotplug: apply layout now and on HDMI plug/unplug
+if [ -x "$HOME/.config/bin/monitor/watch.sh" ]; then
+    "$HOME/.config/bin/monitor/watch.sh" &
+fi
+
 ##############################################################
 ##                     Autostart Apps                       ##
 ##############################################################
