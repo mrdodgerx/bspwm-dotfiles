@@ -5,7 +5,7 @@
 # Requires: bspc, polybar (with enable-ipc = true)
 
 has_fullscreen() {
-  bspc query -N -n .fullscreen 2>/dev/null | grep -q .
+  bspc query -N -d focused -n .fullscreen 2>/dev/null | grep -q .
 }
 
 # polybar-msg can block if the mqueue socket is backed up; never wait forever

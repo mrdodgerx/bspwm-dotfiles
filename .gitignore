@@ -50,3 +50,6 @@ id_*
 *.swp
 .DS_Store
 Thumbs.db
+
+# opencode project-local config (tooling, incl. node_modules)
+.opencode/

@@ -55,7 +55,7 @@ start_once() {
 ##############################################################
 
 pkill -x conky 2>/dev/null
-[ -x "$HOME/.conky/conky-startup.sh" ] && "$HOME/.conky/conky-startup.sh" &
+[ -x "$HOME/.conky/ConkyMaster/conky-startup.sh" ] && "$HOME/.conky/ConkyMaster/conky-startup.sh" &
 
 ##############################################################
 ##                       Polybar                            ##
