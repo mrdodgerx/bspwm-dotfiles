@@ -35,6 +35,9 @@ if [[ -n "$EXTERNAL" ]]; then
     bspc monitor "$INTERNAL" -d 1 2 3 4 5
     bspc monitor "$EXTERNAL" -d 6 7 8 9 0
 
+    # Dual monitor: Brave goes to workspace 6 (external monitor)
+    bspc rule -a Brave-browser desktop='^6'
+
     if [[ "$SILENT" -eq 0 ]]; then
         notify "External Monitor Connected" \
             "<b>eDP-1</b>   1 2 3 4 5  [144Hz]"$'\n'"<b>${EXTERNAL}</b>   6 7 8 9 0  [60Hz]"
@@ -47,6 +50,9 @@ else
         --output "$INTERNAL" --primary --mode 1920x1080 --rate 144
 
     bspc monitor "$INTERNAL" -d 1 2 3 4 5 6 7 8 9 0
+
+    # Single monitor: Brave goes to workspace 2
+    bspc rule -a Brave-browser desktop='^2'
 
     if [[ "$SILENT" -eq 0 ]]; then
         notify "External Monitor Disconnected" \

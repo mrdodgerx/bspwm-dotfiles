@@ -104,7 +104,7 @@ if [ -f "$AUDIO_STATE" ]; then
     pactl set-sink-volume  @DEFAULT_SINK@   "${SINK_VOL}%"  2>/dev/null
     pactl set-sink-mute   @DEFAULT_SINK@   "$SINK_MUTE"    2>/dev/null
     pactl set-source-volume @DEFAULT_SOURCE@ "${SRC_VOL}%"  2>/dev/null
-    pactl set-source-mute  @DEFAULT_SOURCE@ "$SRC_MUTE"    2>/dev/null
+    pactl set-source-mute  @DEFAULT_SOURCE@ yes             2>/dev/null
 fi
 
 numlockx on &

@@ -12,6 +12,10 @@ alt + ctrl + t
 super + Escape
 	pkill -USR1 -x sxhkd
 
+# SYSTEM INTELLIGENCE chat assistant
+ctrl + space
+	"$HOME/.conky/ConkyMaster/scripts/chat-prompt.sh"
+
 #
 # bspwm hotkeys
 #
