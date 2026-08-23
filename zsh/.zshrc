@@ -261,3 +261,9 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 
 # Fix Kerberos for RDP connections
 export KRB5_CONFIG=$HOME/.krb5_minimal.conf
+
+# mimocode
+export PATH=/home/mrdodgerx/.mimocode/bin:$PATH
+
+# Secrets / API keys (gitignored)
+[ -f "$HOME/.config/secrets.zsh" ] && source "$HOME/.config/secrets.zsh"
