@@ -113,7 +113,8 @@ print_fsbar() {
   perc=${perc:-0}
   local color filled empty i
   color=$(usage_color "$perc")
-  local glyph=$'\uFB73'
+  local glyph=$'\u2588'
+  local glyph_empty=$'\u2591'
   local width=6
   filled=$(( (perc * width + 50) / 100 ))
   (( filled > width )) && filled=$width
@@ -121,7 +122,7 @@ print_fsbar() {
   empty=$(( width - filled ))
   local bar_fill="" bar_empty=""
   for ((i=0;i<filled;i++)); do bar_fill+="$glyph"; done
-  for ((i=0;i<empty;i++)); do bar_empty+="$glyph"; done
+  for ((i=0;i<empty;i++)); do bar_empty+="$glyph_empty"; done
   echo "%{F$color}%{T4}${bar_fill}%{F#33f5f5f5}${bar_empty}%{F$color}%{T-} ${perc}%%%{F-}"
 }
 
