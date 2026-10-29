@@ -67,7 +67,7 @@ print_cpu() {
 
   local color
   color=$(usage_color "$usage")
-  echo "%{F$color} ${usage}%%{F-}"
+  echo "%{F$color} ${usage}%%{F-}"
 }
 
 print_mem() {
@@ -80,7 +80,7 @@ print_mem() {
   local perc=$(( used * 100 / total ))
   local color
   color=$(usage_color "$perc")
-  echo "%{F$color} ${used}M%{F-}"
+  echo "%{F$color} ${used}M%{F-}"
 }
 
 print_fs() {
@@ -89,7 +89,7 @@ print_fs() {
   perc=${perc:-0}
   local color
   color=$(usage_color "$perc")
-  echo "%{F$color} ${used}/${total}%{F-}"
+  echo "%{F$color} ${used}/${total}%{F-}"
 }
 
 print_temp() {
@@ -104,7 +104,7 @@ print_temp() {
   fi
   local color
   color=$(temp_color "$t")
-  echo "%{F$color} ${t}°C%{F-}"
+  echo "%{F$color} ${t}°C%{F-}"
 }
 
 print_fsbar() {
