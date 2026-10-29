@@ -67,7 +67,7 @@ print_cpu() {
 
   local color
   color=$(usage_color "$usage")
-  echo "%{F$color} ${usage}%%%{F-}"
+  echo "%{F$color} ${usage}%%{F-}"
 }
 
 print_mem() {
@@ -113,8 +113,8 @@ print_fsbar() {
   perc=${perc:-0}
   local color filled empty i
   color=$(usage_color "$perc")
-  local glyph=$'\u2588'
-  local glyph_empty=$'\u2591'
+  local glyph=$'\u25B0'
+  local glyph_empty=$'\u25B1'
   local width=6
   filled=$(( (perc * width + 50) / 100 ))
   (( filled > width )) && filled=$width
@@ -123,7 +123,7 @@ print_fsbar() {
   local bar_fill="" bar_empty=""
   for ((i=0;i<filled;i++)); do bar_fill+="$glyph"; done
   for ((i=0;i<empty;i++)); do bar_empty+="$glyph_empty"; done
-  echo "%{F$color}%{T4}${bar_fill}%{F#33f5f5f5}${bar_empty}%{F$color}%{T-} ${perc}%%%{F-}"
+  echo "%{F$color}%{T4}${bar_fill}%{F#66f5f5f5}${bar_empty}%{F$color}%{T-} ${perc}%%{F-}"
 }
 
 print_mic() {
@@ -151,7 +151,7 @@ print_mic() {
 
   local color
   color=$(usage_color "$vol")
-  echo "%{F$color} ${vol}%%%{F-}"
+  echo "%{F$color} ${vol}%%{F-}"
 }
 
 print_vol() {
@@ -179,7 +179,7 @@ print_vol() {
 
   local color
   color=$(usage_color "$vol")
-  echo "%{F$color} ${vol}%%%{F-}"
+  echo "%{F$color} ${vol}%%{F-}"
 }
 
 case "$1" in
